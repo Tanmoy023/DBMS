@@ -1,0 +1,93 @@
+create table Hostel_Warden (
+hname varchar2(15) primary key,
+loc varchar2(20),
+warden number(4) references faculty(empno) on delete cascade
+);
+
+insert into Hostel_Warden values('&hname','&loc',&warden);
+alter table faculty add mobile number(10);
+update faculty set mobile=9434667710 where empno=1001;
+update faculty set mobile=8100334412 where empno=2002;
+update faculty set mobile=6216325910 where empno=3003;
+update faculty set mobile=9782103011 where empno=4004;
+update faculty set mobile=8216573216 where empno=6006;
+update faculty set mobile=7484943424 where empno=7007;
+update faculty set mobile=9832009912 where empno=8008;
+update faculty set mobile=9988776655 where empno=9009;
+
+create view CSE_faculty as select * from faculty where deptname='CSE';
+insert into CSE_faculty values(1111,'JAMES','Asso. Professor','15-AUG-10',17000,'CSE',500,9988665522);
+create view faculty_contact as select empno,ename,mobile from faculty;
+insert into faculty_contact values(1112,'MAX',7474747474);
+
+
+
+
+1.create or replace view view1 as select empno,deptname,salary from faculty;
+SQL> select * from view1;
+
+     EMPNO DEPTNAME	       SALARY
+---------- --------------- ----------
+      1001 CSE			16000
+      2002 IT			11000
+      3003 CSE			22000
+      9009 CSE			19500
+      4004 ECE			10000
+      5005 IT			18000
+      6006 EE			23000
+      1111 CSE			17000
+      1112
+      7007 CSE			18000
+      8008 ECE			20000
+
+11 rows selected.
+
+2.create or replace view view2 as select * from faculty where post='Asst. Professor';
+SQL> select * from view2;
+
+     EMPNO ENAME		POST		HIREDATE      SALARY DEPTNAME	     COMMISSION     MOBILE
+---------- -------------------- --------------- --------- ---------- --------------- ---------- ----------
+      1001 SMITH		Asst. Professor 17-DEC-81      16000 CSE		   8000 9434667710
+      2002 ALLEN		Asst. Professor 20-FEB-80      11000 IT 		  15000 8100334412
+      4004 ALAM 		Asst. Professor 28-SEP-89      10000 ECE			9782103011
+
+3.create or replace view view3 as select * from faculty where salary > (select avg(salary) from faculty where deptname='IT');
+
+SELECT * FROM VIEW3;
+
+     EMPNO ENAME		POST		HIREDATE      SALARY DEPTNAME	     COMMISSION     MOBILE
+---------- -------------------- --------------- --------- ---------- --------------- ---------- ----------
+      1001 SMITH		Asst. Professor 17-DEC-81      16000 CSE		   8000 9434667710
+      3003 JONES		Professor	02-APR-82      22000 CSE		   5000 6216325910
+      9009 MESI 		Professor	30-JUL-88      19500 CSE		    350 9988776655
+      5005 DAVID		Asso. Professor 09-JUN-81      18000 IT 		   6000
+      6006 ATLAS		Professor	10-APR-81      23000 EE 			8216573216
+      1111 JAMES		Asso. Professor 15-AUG-10      17000 CSE		    500 9988665522
+      7007 MILLER		Asso. Professor 25-DEC-82      18000 CSE		   3000 7484943424
+      8008 DAVID		Professor	03-APR-83      20000 ECE		   4000 9832009912
+
+8 rows selected.
+4.create or replace view view4 as select * from faculty where empno in(select warden from hostel_warden);
+
+ select * from view4;
+
+     EMPNO ENAME		POST		HIREDATE      SALARY DEPTNAME	     COMMISSION     MOBILE
+---------- -------------------- --------------- --------- ---------- --------------- ---------- ----------
+      1001 SMITH		Asst. Professor 17-DEC-81      16000 CSE		   8000 9434667710
+      3003 JONES		Professor	02-APR-82      22000 CSE		   5000 6216325910
+      6006 ATLAS		Professor	10-APR-81      23000 EE 			8216573216
+      8008 DAVID		Professor	03-APR-83      20000 ECE		   4000 9832009912
+      9009 MESI 		Professor	30-JUL-88      19500 CSE		    350 9988776655
+
+5.create or replace view view5 as select hname,ename,deptname,mobile from faculty inner join hostel_warden on faculty.empno=hostel_warden.warden; 
+
+select * from view5;
+
+HNAME		ENAME		     DEPTNAME		 MOBILE
+--------------- -------------------- --------------- ----------
+Ruby		SMITH		     CSE	     9434667710
+Emerald 	JONES		     CSE	     6216325910
+Topaz		ATLAS		     EE 	     8216573216
+Diamond 	DAVID		     ECE	     9832009912
+Opal		MESI		     CSE	     9988776655
+
